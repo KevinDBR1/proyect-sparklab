@@ -26,7 +26,7 @@ export default function Information() {
   ]
 
   return (
-    <section className="bg-[#0f172a] py-20 px-4">
+    <section className="bg-[#0f172a] py-30 px-4">
       <h2 className="text-3xl md:text-4xl font-bold text-cyan-500 text-center mb-16">
         Características
       </h2>

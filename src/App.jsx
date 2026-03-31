@@ -2,6 +2,8 @@ import Header from "./components/Header";
 import Banner from "./components/banner";
 import Information from "./components/information";
 import Tecnology from "./components/tecnology";
+import Start from "./components/start";
+import Footer from "./components/footer";
 import './App.css'
 
 function App() {
@@ -12,6 +14,8 @@ function App() {
       <Banner />
       <Information />
       <Tecnology />
+      <Start /> 
+      <Footer />
     </div>
   )
 }
