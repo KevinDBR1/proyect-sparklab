@@ -1,4 +1,4 @@
-import React from "react";
+ import React from "react";
 
 function Header() {
   return (
@@ -9,16 +9,16 @@ function Header() {
 
       <nav>
         <ul className="list-none flex gap-4 m-0">
-          <a href="#" className="px-4 py-2 rounded-lg hover:bg-cyan-500 transition-colors">Inicio</a>
-          <a href="#" className="px-4 py-2 rounded-lg hover:bg-cyan-500 transition-colors">Modos de juego</a>
-          <a href="#" className="px-4 py-2 rounded-lg hover:bg-cyan-500 transition-colors">Ranking</a>
-          <a href="#" className="px-4 py-2 rounded-lg hover:bg-cyan-500 transition-colors">Informacion</a>
+          <a href="#" className="px-4 py-2 rounded-lg hover:bg-cyan-500 transition-colors font-bold">Inicio</a>
+          <a href="#" className="px-4 py-2 rounded-lg hover:bg-cyan-500 transition-colors font-bold">Modos de juego</a>
+          <a href="#" className="px-4 py-2 rounded-lg hover:bg-cyan-500 transition-colors font-bold">Ranking</a>
+          <a href="#" className="px-4 py-2 rounded-lg hover:bg-cyan-500 transition-colors font-bold">Informacion</a>
         </ul>
       </nav>
 
       <div className="flex gap-4">
-        <a href="#" className="px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">Registrarse</a>
-        <a href="#" className="px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">Iniciar Sesion</a>
+        <a href="#" className="px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors font-bold">Registrarse</a>
+        <a href="#" className="px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors font-bold">Iniciar Sesion</a>
       </div>
     </header>
   );

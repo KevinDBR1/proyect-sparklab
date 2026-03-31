@@ -96,7 +96,7 @@ function MiniRobot({ className }: { className?: string }) {
 
 export default function Banner() {
   return (
-    <section className="relative min-h-[500px] md:min-h-[612px] flex items-center justify-center overflow-hidden bg-[#0f172a]">
+    <section className="relative min-h-[500px] md:min-h-[800px] flex items-center justify-center overflow-hidden bg-[#0f172a]">
       {/* Fondo con gradiente sutil */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#0f172a] via-[#1e3a5f] to-[#0f172a]" />
       
