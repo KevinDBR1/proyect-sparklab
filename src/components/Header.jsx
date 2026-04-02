@@ -1,4 +1,4 @@
- import React from "react";
+import React from "react";
 
 function Header() {
   return (
@@ -17,8 +17,8 @@ function Header() {
       </nav>
 
       <div className="flex gap-4">
-        <a href="#" className="px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors font-bold">Registrarse</a>
-        <a href="#" className="px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors font-bold">Iniciar Sesion</a>
+        <a href="/register" className="px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors font-bold">Registrarse</a>
+        <a href="/login" className="px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors font-bold">Iniciar Sesion</a>
       </div>
     </header>
   );

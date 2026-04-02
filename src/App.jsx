@@ -1,22 +1,37 @@
+import { Routes, Route } from 'react-router-dom'
 import Header from "./components/Header";
-import Banner from "./components/banner";
-import Information from "./components/information";
-import Tecnology from "./components/tecnology";
-import Start from "./components/start";
-import Footer from "./components/footer";
+import Banner from "./components/Banner";
+import Information from "./components/Information";
+import Tecnology from "./components/Tecnology";
+import Start from "./components/Start";
+import Footer from "./components/Footer";
+import Login from './Pages/Auth/Login'
+import Register from './Pages/Auth/register'
 import './App.css'
 
-function App() {
-
+function HomePage() {
   return (
-    <div>
+    <>
       <Header />
       <Banner />
       <Information />
       <Tecnology />
-      <Start /> 
+      <Start />
       <Footer />
-    </div>
+    </>
+  )
+}
+
+function App() {
+  return (
+    <>
+
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </>
   )
 }
 
