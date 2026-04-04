@@ -7,6 +7,7 @@ import Start from "./components/Start";
 import Footer from "./components/Footer";
 import Login from './Pages/Auth/Login'
 import Register from './Pages/Auth/register'
+import Profile from './Pages/Profile'
 import './App.css'
 
 function HomePage() {
@@ -30,6 +31,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </>
   )

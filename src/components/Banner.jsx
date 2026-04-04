@@ -1,8 +1,7 @@
-import { Button } from "@/components/ui/button"
 import { Zap } from "lucide-react"
 
 // Componente de rayo decorativo
-function LightningBolt({ className }: { className?: string }) {
+function LightningBolt({ className }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -20,7 +19,7 @@ function LightningBolt({ className }: { className?: string }) {
 }
 
 // Componente de tuerca
-function Nut({ className }: { className?: string }) {
+function Nut({ className }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -41,7 +40,7 @@ function Nut({ className }: { className?: string }) {
 }
 
 // Componente de tornillo
-function Screw({ className }: { className?: string }) {
+function Screw({ className }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -59,7 +58,7 @@ function Screw({ className }: { className?: string }) {
 }
 
 // Componente de mini robot
-function MiniRobot({ className }: { className?: string }) {
+function MiniRobot({ className }) {
   return (
     <svg
       viewBox="0 0 32 32"
@@ -67,28 +66,15 @@ function MiniRobot({ className }: { className?: string }) {
       className={className}
       xmlns="http://www.w3.org/2000/svg"
     >
-      {/* Antena */}
       <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" strokeWidth="1.5" opacity="0.6" />
       <circle cx="16" cy="2" r="1.5" fill="currentColor" opacity="0.6" />
-      
-      {/* Cabeza */}
       <rect x="8" y="6" width="16" height="12" rx="2" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.5" />
-      
-      {/* Ojos */}
       <circle cx="12" cy="12" r="2" fill="currentColor" opacity="0.7" />
       <circle cx="20" cy="12" r="2" fill="currentColor" opacity="0.7" />
-      
-      {/* Boca */}
       <line x1="12" y1="15" x2="20" y2="15" stroke="currentColor" strokeWidth="1.5" opacity="0.5" />
-      
-      {/* Cuerpo */}
       <rect x="10" y="18" width="12" height="10" rx="1" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.5" />
-      
-      {/* Brazos */}
       <line x1="10" y1="22" x2="6" y2="22" stroke="currentColor" strokeWidth="1.5" opacity="0.5" />
       <line x1="22" y1="22" x2="26" y2="22" stroke="currentColor" strokeWidth="1.5" opacity="0.5" />
-      
-      {/* Panel central */}
       <rect x="14" y="21" width="4" height="4" rx="0.5" fill="currentColor" opacity="0.4" />
     </svg>
   )
@@ -100,23 +86,23 @@ export default function Banner() {
       {/* Fondo con gradiente sutil */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#0f172a] via-[#1e3a5f] to-[#0f172a]" />
       
-      {/* Elementos decorativos - Rayos izquierda */}
+      {/* Rayos izquierda */}
       <LightningBolt className="absolute top-20 left-8 w-6 h-6 text-cyan-400 animate-pulse" />
       <LightningBolt className="absolute top-40 left-16 w-8 h-8 text-cyan-300 animate-pulse delay-300" />
       <LightningBolt className="absolute bottom-32 left-12 w-5 h-5 text-cyan-500 animate-pulse delay-500" />
       <LightningBolt className="absolute top-60 left-4 w-4 h-4 text-cyan-400 animate-pulse delay-700" />
       
-      {/* Elementos decorativos - Rayos derecha */}
+      {/* Rayos derecha */}
       <LightningBolt className="absolute top-24 right-10 w-7 h-7 text-cyan-400 animate-pulse delay-200" />
       <LightningBolt className="absolute top-52 right-20 w-5 h-5 text-cyan-300 animate-pulse delay-400" />
       <LightningBolt className="absolute bottom-40 right-8 w-6 h-6 text-cyan-500 animate-pulse delay-600" />
       
-      {/* Tuercas y tornillos - izquierda */}
+      {/* Tuercas y tornillos izquierda */}
       <Nut className="absolute top-32 left-24 w-8 h-8 text-cyan-400/60 animate-spin-slow" />
       <Screw className="absolute bottom-48 left-20 w-6 h-6 text-cyan-300/50 animate-bounce-slow" />
       <Nut className="absolute top-72 left-6 w-5 h-5 text-cyan-500/40 animate-spin-slow delay-500" />
       
-      {/* Tuercas y tornillos - derecha */}
+      {/* Tuercas y tornillos derecha */}
       <Screw className="absolute top-36 right-24 w-7 h-7 text-cyan-400/50 animate-bounce-slow delay-300" />
       <Nut className="absolute bottom-52 right-16 w-6 h-6 text-cyan-300/60 animate-spin-slow delay-200" />
       <Screw className="absolute top-64 right-6 w-5 h-5 text-cyan-500/40 animate-bounce-slow delay-700" />
@@ -129,7 +115,7 @@ export default function Banner() {
       <MiniRobot className="absolute top-1/2 left-[5%] w-6 h-6 text-cyan-400/70 animate-float delay-200" />
       <MiniRobot className="absolute top-1/3 right-[8%] w-8 h-8 text-cyan-300/80 animate-float delay-600" />
       
-      {/* Partículas de circuito de fondo */}
+      {/* Lineas de circuito de fondo */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-1/4 left-1/4 w-px h-32 bg-cyan-400" />
         <div className="absolute top-1/3 left-1/4 w-24 h-px bg-cyan-400" />
@@ -145,7 +131,7 @@ export default function Banner() {
           <span className="text-cyan-400 text-sm font-medium">Plataforma Educativa de Electrónica</span>
         </div>
         
-        {/* Título principal */}
+        {/* Titulo principal */}
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight text-balance">
           <span className="text-white">Empieza a conectar con el </span>
           <span className="bg-gradient-to-r from-cyan-400 via-teal-400 to-cyan-300 bg-clip-text text-transparent">
@@ -153,19 +139,16 @@ export default function Banner() {
           </span>
         </h1>
         
-        {/* Subtítulo */}
+        {/* Subtitulo */}
         <p className="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed text-pretty">
           Empieza a desarrollar habilidades en electrónica básica armando tu primer circuito
         </p>
         
-        {/* Botón CTA */}
-        <Button 
-          size="lg"
-          className="bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white font-semibold px-8 py-6 text-lg rounded-full shadow-lg shadow-cyan-500/25 transition-all duration-300 hover:shadow-cyan-500/40 hover:scale-105"
-        >
-          <Zap className="w-5 h-5 mr-2" />
+        {/* Boton CTA */}
+        <button className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white font-semibold px-8 py-4 text-lg rounded-full shadow-lg shadow-cyan-500/25 transition-all duration-300 hover:shadow-cyan-500/40 hover:scale-105">
+          <Zap className="w-5 h-5" />
           Comienza a conectar
-        </Button>
+        </button>
       </div>
       
       {/* Efecto de brillo inferior */}

@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Zap } from 'lucide-react'
 
 // Componente de tuerca (reutilizado del banner)
-function Nut({ className }: { className?: string }) {
+function Nut({ className }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -26,7 +26,7 @@ function Nut({ className }: { className?: string }) {
 
 export default function Start() {
   const [isVisible, setIsVisible] = useState(false)
-  const sectionRef = useRef<HTMLDivElement>(null)
+  const sectionRef = useRef(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -80,7 +80,7 @@ export default function Start() {
         </p>
         
         <button className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-8 py-3 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25">
-          Crear Cuenta
+          <a href="/Register">Crear Cuenta</a>
           <Zap className="w-5 h-5" />
         </button>
       </div>
