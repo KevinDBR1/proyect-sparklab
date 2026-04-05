@@ -1,174 +1,319 @@
 import React, { useState } from 'react'
-import { X, Zap, Flame, Trophy } from 'lucide-react'
+import { X, Zap, Flame, Trophy, Shield, Clock, CircuitBoard } from 'lucide-react'
 
-// Iconos para los logros
-function AchievementIcon({ icon, size = "normal", unlocked = true }) {
-  const sizeClass = size === "large" ? "w-10 h-10" : "w-6 h-6"
-  const colorClass = unlocked ? "" : "opacity-50"
-  
+// ── Color palette per icon ─────────────────────────────────────────────────
+const ICON_CONFIG = {
+  zap:     { color: '#fbbf24', bg: '#fbbf2415', border: '#fbbf2435', label: 'Energía'    },
+  omega:   { color: '#22d3ee', bg: '#22d3ee15', border: '#22d3ee35', label: 'Ohm'        },
+  flame:   { color: '#f97316', bg: '#f9731615', border: '#f9731635', label: 'Racha'      },
+  link:    { color: '#a78bfa', bg: '#a78bfa15', border: '#a78bfa35', label: 'Serie'      },
+  settings:{ color: '#34d399', bg: '#34d39915', border: '#34d39935', label: 'Circuito'   },
+  book:    { color: '#60a5fa', bg: '#60a5fa15', border: '#60a5fa35', label: 'Estudio'    },
+  timer:   { color: '#f472b6', bg: '#f472b615', border: '#f472b635', label: 'Velocidad'  },
+  trophy:  { color: '#fbbf24', bg: '#fbbf2415', border: '#fbbf2435', label: 'Maestría'   },
+}
+
+// ── Icon renderer ──────────────────────────────────────────────────────────
+function AchievementIcon({ icon, size = 20 }) {
+  const cfg = ICON_CONFIG[icon] || ICON_CONFIG.zap
+  const style = { width: size, height: size, color: cfg.color, flexShrink: 0 }
+
   const icons = {
-    zap: <Zap className={`${sizeClass} text-yellow-400 ${colorClass}`} />,
-    omega: <span className={`font-bold ${size === "large" ? "text-2xl" : "text-lg"} text-cyan-400 ${colorClass}`}>Ω</span>,
-    flame: <Flame className={`${sizeClass} text-orange-400 ${colorClass}`} />,
-    link: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={`${sizeClass} text-cyan-400 ${colorClass}`}>
+    zap:      <Zap style={style} />,
+    omega:    <span style={{ fontSize: size * 0.9, fontFamily: 'serif', color: cfg.color, lineHeight: 1, fontWeight: 700 }}>Ω</span>,
+    flame:    <Flame style={style} />,
+    link:     (
+      <svg viewBox="0 0 24 24" fill="none" stroke={cfg.color} strokeWidth="2" style={style}>
         <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
         <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
       </svg>
     ),
-    settings: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={`${sizeClass} text-gray-400 ${colorClass}`}>
-        <circle cx="12" cy="12" r="3"/>
-        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-      </svg>
-    ),
-    book: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={`${sizeClass} text-gray-400 ${colorClass}`}>
-        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-      </svg>
-    ),
-    timer: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={`${sizeClass} text-gray-400 ${colorClass}`}>
-        <circle cx="12" cy="12" r="10"/>
-        <polyline points="12 6 12 12 16 14"/>
-      </svg>
-    ),
-    trophy: <Trophy className={`${sizeClass} text-gray-400 ${colorClass}`} />,
+    settings: <CircuitBoard style={style} />,
+    book:     <Shield style={style} />,
+    timer:    <Clock style={style} />,
+    trophy:   <Trophy style={style} />,
   }
-  
-  return icons[icon] || <Zap className={`${sizeClass} text-cyan-400 ${colorClass}`} />
+  return icons[icon] || <Zap style={style} />
 }
 
+// ── Mini progress arc (SVG) ────────────────────────────────────────────────
+function ArcProgress({ pct, color, size = 52 }) {
+  const r = 22
+  const cx = size / 2
+  const circumference = 2 * Math.PI * r
+  const dash = (pct / 100) * circumference
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ position: 'absolute', inset: 0, transform: 'rotate(-90deg)' }}>
+      <circle cx={cx} cy={cx} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="2.5" />
+      <circle
+        cx={cx} cy={cx} r={r}
+        fill="none"
+        stroke={color}
+        strokeWidth="2.5"
+        strokeDasharray={`${dash} ${circumference}`}
+        strokeLinecap="round"
+        style={{ filter: `drop-shadow(0 0 3px ${color}90)` }}
+      />
+    </svg>
+  )
+}
+
+// ── CARD ──────────────────────────────────────────────────────────────────
 export default function AchievementCard({ achievement }) {
   const [showModal, setShowModal] = useState(false)
+  const cfg = ICON_CONFIG[achievement.icon] || ICON_CONFIG.zap
+  const pct = Math.round((achievement.progress / achievement.total) * 100)
 
   return (
     <>
-      {/* Card del logro */}
-      <div 
+      <div
         onClick={() => setShowModal(true)}
-        className={`relative group cursor-pointer p-4 rounded-xl border transition-all duration-300 hover:scale-105 ${
-          achievement.unlocked 
-            ? 'bg-[#111c32] border-cyan-500/40 hover:border-cyan-400 hover:shadow-lg hover:shadow-cyan-500/10' 
-            : 'bg-[#0d1525] border-gray-700/50 hover:border-gray-600'
-        }`}
+        className="relative cursor-pointer rounded-xl p-4 transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] group"
+        style={{
+          background: achievement.unlocked ? cfg.bg : 'rgba(255,255,255,0.025)',
+          border: `1px solid ${achievement.unlocked ? cfg.border : 'rgba(255,255,255,0.06)'}`,
+          fontFamily: "'Courier New', monospace",
+        }}
       >
-        {/* Icono */}
-        <div className={`w-14 h-14 mx-auto mb-3 rounded-xl flex items-center justify-center ${
-          achievement.unlocked 
-            ? 'bg-[#1a2742]' 
-            : 'bg-[#151f30]'
-        }`}>
-          <AchievementIcon icon={achievement.icon} unlocked={achievement.unlocked} />
+        {/* Glow top-line */}
+        {achievement.unlocked && (
+          <div
+            className="absolute top-0 left-4 right-4 h-px rounded-full"
+            style={{ background: `linear-gradient(90deg, transparent, ${cfg.color}80, transparent)` }}
+          />
+        )}
+
+        {/* Arc + icon */}
+        <div className="relative w-[52px] h-[52px] mx-auto mb-3">
+          <ArcProgress pct={pct} color={achievement.unlocked ? cfg.color : '#334155'} />
+          <div
+            className="absolute inset-[6px] rounded-full flex items-center justify-center"
+            style={{
+              background: achievement.unlocked ? `${cfg.color}18` : 'rgba(255,255,255,0.04)',
+              border: `1px solid ${achievement.unlocked ? cfg.border : 'rgba(255,255,255,0.06)'}`,
+            }}
+          >
+            <AchievementIcon icon={achievement.icon} size={18} />
+          </div>
         </div>
-        
-        {/* Titulo */}
-        <p className={`text-center text-xs font-medium ${
-          achievement.unlocked ? 'text-white' : 'text-gray-500'
-        }`}>
+
+        {/* Title */}
+        <p
+          className="text-center text-[11px] font-bold leading-tight tracking-wide"
+          style={{ color: achievement.unlocked ? '#f1f5f9' : '#475569', letterSpacing: '0.06em' }}
+        >
           {achievement.title}
         </p>
 
-        {/* Check de completado */}
+        {/* XP reward */}
+        <p
+          className="text-center text-[10px] mt-1 font-mono"
+          style={{ color: achievement.unlocked ? cfg.color : '#334155' }}
+        >
+          +{achievement.xpReward} XP
+        </p>
+
+        {/* Unlocked checkmark badge */}
         {achievement.unlocked && (
-          <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
-            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+          <div
+            className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full flex items-center justify-center"
+            style={{
+              background: cfg.color,
+              boxShadow: `0 0 8px ${cfg.color}80`,
+            }}
+          >
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="3.5" strokeLinecap="round">
+              <polyline points="20 6 9 17 4 12" />
             </svg>
           </div>
         )}
 
-        {/* Barra de progreso para no completados */}
+        {/* Locked overlay hint */}
         {!achievement.unlocked && (
-          <div className="mt-2 h-1 bg-[#1a2742] rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-cyan-500/50 rounded-full"
-              style={{ width: `${(achievement.progress / achievement.total) * 100}%` }}
-            ></div>
+          <div
+            className="absolute bottom-2 right-2 w-4 h-4 rounded opacity-30"
+            style={{ color: '#64748b' }}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
           </div>
         )}
       </div>
 
-      {/* Modal */}
+      {/* ── MODAL ─────────────────────────────────────────────────────── */}
       {showModal && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(6px)' }}
           onClick={() => setShowModal(false)}
         >
-          <div 
-            className="relative w-full max-w-sm bg-[#111c32] border border-cyan-500/30 rounded-2xl overflow-hidden shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
+          <div
+            className="relative w-full max-w-sm rounded-2xl overflow-hidden"
+            style={{
+              background: '#0a1628',
+              border: `1px solid ${cfg.border}`,
+              boxShadow: `0 0 40px ${cfg.color}18`,
+              fontFamily: "'Courier New', monospace",
+            }}
+            onClick={e => e.stopPropagation()}
           >
+            {/* Top glow strip */}
+            <div
+              className="absolute top-0 left-0 right-0 h-px"
+              style={{ background: `linear-gradient(90deg, transparent 5%, ${cfg.color}80, transparent 95%)` }}
+            />
+
             {/* Header */}
-            <div className="bg-gradient-to-r from-cyan-600 to-blue-600 px-5 py-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-white font-bold">Detalles del Logro</h3>
-                <button 
-                  onClick={() => setShowModal(false)}
-                  className="text-white/80 hover:text-white"
+            <div
+              className="relative px-5 py-4 flex items-center justify-between"
+              style={{
+                background: `${cfg.bg}`,
+                borderBottom: `1px solid ${cfg.border}`,
+              }}
+            >
+              <div>
+                <span
+                  className="text-[10px] font-bold tracking-widest uppercase"
+                  style={{ color: cfg.color, letterSpacing: '0.18em' }}
                 >
-                  <X className="w-5 h-5" />
-                </button>
+                  {cfg.label}
+                </span>
+                <p className="text-sm font-bold mt-0.5" style={{ color: '#f1f5f9' }}>
+                  {achievement.title}
+                </p>
               </div>
-              <div className="mt-2 inline-block px-3 py-1 bg-[#0a1628]/50 rounded-full">
-                <span className="text-cyan-200 text-sm font-medium">{achievement.title}</span>
-              </div>
+              <button
+                onClick={() => setShowModal(false)}
+                className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors duration-150"
+                style={{ color: '#64748b', border: '1px solid rgba(255,255,255,0.08)' }}
+              >
+                <X size={14} />
+              </button>
             </div>
 
-            {/* Contenido */}
-            <div className="p-5">
-              {/* Icono grande */}
-              <div className={`w-16 h-16 mx-auto mb-4 rounded-xl flex items-center justify-center ${
-                achievement.unlocked ? 'bg-[#1a2742]' : 'bg-[#151f30]'
-              }`}>
-                <AchievementIcon icon={achievement.icon} size="large" unlocked={achievement.unlocked} />
+            {/* Body */}
+            <div className="p-5 space-y-4">
+
+              {/* Icon large */}
+              <div className="flex justify-center">
+                <div
+                  className="relative w-20 h-20 rounded-2xl flex items-center justify-center"
+                  style={{
+                    background: achievement.unlocked ? `${cfg.color}12` : 'rgba(255,255,255,0.04)',
+                    border: `1px solid ${achievement.unlocked ? cfg.border : 'rgba(255,255,255,0.07)'}`,
+                    boxShadow: achievement.unlocked ? `0 0 24px ${cfg.color}25` : 'none',
+                  }}
+                >
+                  <AchievementIcon icon={achievement.icon} size={36} />
+                  {achievement.unlocked && (
+                    <div
+                      className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center"
+                      style={{ background: cfg.color, boxShadow: `0 0 10px ${cfg.color}90` }}
+                    >
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="3.5" strokeLinecap="round">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
               </div>
 
-              <p className="text-center text-gray-300 text-sm mb-5">{achievement.description}</p>
+              {/* Description */}
+              <p className="text-center text-xs leading-relaxed" style={{ color: '#94a3b8' }}>
+                {achievement.description}
+              </p>
 
-              {/* Condiciones */}
-              <div className="bg-[#0a1628] rounded-xl p-4 mb-4">
-                <p className="text-cyan-400 text-xs font-medium mb-2">Condiciones de Obtencion:</p>
-                <p className="text-gray-300 text-sm">{achievement.condition}</p>
-                
-                <div className="mt-3">
-                  <div className="flex justify-between text-xs mb-1">
-                    <span className="text-gray-500">Progreso</span>
-                    <span className="text-cyan-400 font-bold">{achievement.progress} / {achievement.total}</span>
-                  </div>
-                  <div className="h-2 bg-[#1a2742] rounded-full overflow-hidden">
-                    <div 
-                      className={`h-full rounded-full ${
-                        achievement.unlocked ? 'bg-green-500' : 'bg-cyan-500'
-                      }`}
-                      style={{ width: `${(achievement.progress / achievement.total) * 100}%` }}
-                    ></div>
-                  </div>
-                </div>
+              {/* Condition block */}
+              <div
+                className="rounded-xl p-4"
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
+              >
+                <p className="text-[10px] font-bold tracking-widest uppercase mb-2"
+                  style={{ color: cfg.color, letterSpacing: '0.14em' }}>
+                  Condición de Obtención
+                </p>
+                <p className="text-xs leading-relaxed mb-4" style={{ color: '#94a3b8' }}>
+                  {achievement.condition}
+                </p>
 
-                <div className="mt-2 text-right">
-                  <span className={`text-xs font-bold ${achievement.unlocked ? 'text-green-400' : 'text-cyan-400'}`}>
-                    {Math.round((achievement.progress / achievement.total) * 100)}%
+                {/* Progress bar */}
+                <div className="flex justify-between text-[10px] mb-1.5">
+                  <span style={{ color: '#475569' }}>Progreso</span>
+                  <span className="font-bold" style={{ color: cfg.color }}>
+                    {achievement.progress} / {achievement.total}
                   </span>
                 </div>
+                <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
+                  <div
+                    className="h-full rounded-full transition-all duration-700"
+                    style={{
+                      width: `${pct}%`,
+                      background: achievement.unlocked
+                        ? `linear-gradient(90deg, ${cfg.color}90, ${cfg.color})`
+                        : '#334155',
+                      boxShadow: achievement.unlocked ? `0 0 6px ${cfg.color}70` : 'none',
+                    }}
+                  />
+                </div>
+                <p
+                  className="text-right text-[10px] font-bold mt-1 font-mono"
+                  style={{ color: achievement.unlocked ? cfg.color : '#475569' }}
+                >
+                  {pct}%
+                </p>
               </div>
 
-              {/* Recompensa */}
-              <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4">
-                <p className="text-yellow-400 text-xs font-medium mb-1">Recompensa</p>
-                <div className="flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-yellow-400" />
-                  <span className="text-white font-bold">{achievement.xpReward} XP</span>
+              {/* XP reward */}
+              <div
+                className="rounded-xl p-4 flex items-center justify-between"
+                style={{
+                  background: 'rgba(251,191,36,0.06)',
+                  border: '1px solid rgba(251,191,36,0.2)',
+                }}
+              >
+                <div>
+                  <p className="text-[10px] font-bold tracking-widest uppercase mb-0.5"
+                    style={{ color: '#fbbf24', letterSpacing: '0.14em' }}>
+                    Recompensa
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <Zap size={14} style={{ color: '#fbbf24' }} />
+                    <span className="text-sm font-bold" style={{ color: '#f1f5f9' }}>
+                      {achievement.xpReward} XP
+                    </span>
+                  </div>
+                </div>
+                <div
+                  className="text-2xl font-bold font-mono"
+                  style={{ color: achievement.unlocked ? '#fbbf24' : '#334155' }}
+                >
+                  {achievement.unlocked ? '★' : '☆'}
                 </div>
               </div>
             </div>
 
-            {/* Boton cerrar */}
+            {/* Footer button */}
             <div className="px-5 pb-5">
-              <button 
+              <button
                 onClick={() => setShowModal(false)}
-                className="w-full py-2.5 bg-cyan-500 hover:bg-cyan-400 text-white font-bold rounded-xl transition-colors"
+                className="w-full py-2.5 rounded-xl text-xs font-bold tracking-widest uppercase transition-all duration-200 hover:scale-[1.02]"
+                style={{
+                  background: `${cfg.color}18`,
+                  color: cfg.color,
+                  border: `1px solid ${cfg.border}`,
+                  letterSpacing: '0.15em',
+                  boxShadow: `0 0 0 0 ${cfg.color}`,
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.background = `${cfg.color}28`
+                  e.currentTarget.style.boxShadow = `0 0 14px ${cfg.color}30`
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = `${cfg.color}18`
+                  e.currentTarget.style.boxShadow = 'none'
+                }}
               >
                 Cerrar
               </button>
